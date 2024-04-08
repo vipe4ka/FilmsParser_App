@@ -1,21 +1,18 @@
 package com.example.filmsparserapp.ui.gallery;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import com.example.filmsparserapp.FilmData;
 import com.example.filmsparserapp.R;
 import com.example.filmsparserapp.databinding.FragmentGalleryBinding;
 import com.squareup.picasso.Picasso;
-import org.jsoup.Connection;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,8 +30,19 @@ public class GalleryFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        fetchFilmData();
+        binding.button.setOnClickListener(v -> {
+            int vis = binding.layoutFields.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
+            binding.layoutFields.setVisibility(vis);
+            binding.editTextId.setVisibility(vis);
+            binding.buttonSearch.setVisibility(vis);
+        });
+        binding.buttonSearch.setOnClickListener(v -> {
+            binding.layoutFields.setVisibility(View.GONE);
+            binding.editTextId.setVisibility(View.GONE);
+            binding.buttonSearch.setVisibility(View.GONE);
+            String id = binding.editTextId.getText().toString();
+            fetchFilmData(id);
+        });
 
         return root;
     }
@@ -44,28 +52,27 @@ public class GalleryFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    String apiKey = "08e87614-dc37-4454-a8dd-8a4c51313b3d";
-    private void fetchFilmData() {
-        new Thread(this::run).start();
+    private void fetchFilmData(String id) {
+        new Thread(() -> run(id)).start();
     }
 
     private void updateUI(FilmData filmData) {
         // Обновление постера
         ImageView posterImageView = getView().findViewById(R.id.posterImageView);
         Picasso.get().load(filmData.getPosterUrl()).into(posterImageView);
-
+        posterImageView.setVisibility(View.VISIBLE);
         // Обновление названия
         TextView titleTextView = getView().findViewById(R.id.titleTextView);
         titleTextView.setText(filmData.getTitle());
-
+        titleTextView.setVisibility(View.VISIBLE);
         // Обновление года
         TextView yearTextView = getView().findViewById(R.id.yearTextView);
         yearTextView.setText(String.valueOf(filmData.getYear()));
-
+        yearTextView.setVisibility(View.VISIBLE);
         // Обновление рейтинга
         TextView ratingTextView = getView().findViewById(R.id.ratingTextView);
         ratingTextView.setText(String.valueOf(filmData.getRating()));
-
+        ratingTextView.setVisibility(View.VISIBLE);
         // Обновление жанров
         TextView genresTextView = getView().findViewById(R.id.genresTextView);
         StringBuilder genresBuilder = new StringBuilder();
@@ -75,16 +82,17 @@ public class GalleryFragment extends Fragment {
         String genresText = genresBuilder.toString().trim();
         genresText = genresText.substring(0, genresText.length() - 1);
         genresTextView.setText(genresText);
-
+        genresTextView.setVisibility(View.VISIBLE);
         // Обновление описания
         TextView descriptionTextView = getView().findViewById(R.id.descriptionTextView);
         descriptionTextView.setText(filmData.getDescription());
+        descriptionTextView.setVisibility(View.VISIBLE);
     }
 
-    private void run() {
+    private void run(String id) {
         try {
             // Загрузка страницы фильма
-            Document page = Jsoup.connect("https://ru.kinorium.com/116780/").get();
+            Document page = Jsoup.connect("https://ru.kinorium.com/" + id + "/").get();
             Element titleEl = page.select("h1[class=\"film-page__title-text film-page__itemprop\"]").first();
             String title = titleEl.text();
             Element premiereAndMoney = page.select("td[class=\"data\"]").get(3);
