@@ -7,24 +7,26 @@
         android:layout_height="match_parent"
         tools:context=".ui.gallery.GalleryFragment">
 
+
     <ImageView
             android:id="@+id/posterImageView"
-            android:layout_width="245dp"
-            android:layout_height="321dp"
+            android:layout_width="314dp"
+            android:layout_height="472dp"
             android:layout_marginTop="16dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="gone"/>
+            android:visibility="visible" app:layout_constraintHorizontal_bias="0.502"/>
+
     <TextView
             android:id="@+id/titleTextView"
-            android:layout_width="241dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="36dp"
+            android:layout_width="291dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@id/posterImageView"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="84dp"
-            android:visibility="gone"/>
+            android:visibility="visible" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.468"/>
 
     <TextView
             android:id="@+id/yearTextView"
@@ -32,74 +34,87 @@
             android:layout_height="22dp"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="24dp" android:layout_marginStart="60dp"
-            android:visibility="gone"/>
+            android:layout_marginTop="8dp" android:layout_marginStart="8dp"
+            android:visibility="visible"/>
+
     <TextView
             android:id="@+id/ratingTextView"
-            android:layout_width="55dp"
-            android:layout_height="32dp"
-            app:layout_constraintTop_toBottomOf="@id/yearTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="176dp" android:layout_marginTop="12dp"
-            android:visibility="gone"/>
-
+            android:layout_width="62dp"
+            android:layout_height="50dp"
+            android:background="#FFFFFF"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="@+id/posterImageView" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="478dp"
+            android:layout_marginEnd="308dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.658" app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintBottom_toTopOf="@+id/layout_fields"/>
     <TextView
             android:id="@+id/genresTextView"
-            android:layout_width="167dp"
-            android:layout_height="31dp"
-            app:layout_constraintTop_toBottomOf="@id/ratingTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="4dp" android:layout_marginStart="228dp"
-            android:visibility="gone"/>
+            android:layout_width="96dp"
+            android:layout_height="97dp"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@+id/yearTextView"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView" app:layout_constraintEnd_toEndOf="parent"/>
     <TextView
             android:id="@+id/descriptionTextView"
-            android:layout_width="339dp"
-            android:layout_height="121dp"
-            app:layout_constraintTop_toBottomOf="@id/genresTextView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="36dp" android:layout_marginTop="24dp"
-            android:visibility="gone"/>
-
+            android:layout_width="280dp"
+            android:layout_height="185dp"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@+id/yearTextView"
+            app:layout_constraintEnd_toStartOf="@+id/genresTextView" android:layout_marginTop="16dp"
+            android:layout_marginEnd="28dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="1.0"/>
     <Button
-            android:text="+"
-            android:layout_width="65dp"
-            android:layout_height="65dp" android:id="@+id/button"
+            android:text="фильтр"
+            android:layout_width="135dp"
+            android:layout_height="50dp" android:id="@+id/button"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="720dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="328dp" android:textSize="34sp"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="10sp" android:visibility="visible" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0"/>
     <LinearLayout
             android:id="@+id/layout_fields"
-            android:layout_width="410dp"
-            android:layout_height="150dp"
+            android:layout_width="414dp"
+            android:layout_height="166dp"
             android:orientation="vertical"
+            android:background="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@+id/posterImageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.821">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.913" app:layout_constraintHorizontal_bias="1.0"
+    >
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="48dp" android:id="@+id/setgenresButton"/>
 
         <EditText
-                android:id="@+id/edit_text_id"
-                android:layout_width="400dp"
-                android:layout_height="wrap_content"
-                android:hint="Введите ID"
-                android:inputType="number"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-        />
-        <Button
-                android:id="@+id/button_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Найти"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-        />
-
+                android:id="@+id/setMinRating"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="Минимальный рейтинг"
+                android:inputType="text"/>
     </LinearLayout>
+    <Button
+            android:text="Обновить"
+            android:layout_width="149dp"
+            android:layout_height="48dp" android:id="@+id/research"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="108dp" app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintEnd_toStartOf="@+id/button" app:layout_constraintHorizontal_bias="1.0"/>
+    <Button
+            android:text="Просмотрено"
+            android:layout_width="133dp"
+            android:layout_height="50dp" android:id="@+id/watched"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintEnd_toStartOf="@+id/research"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

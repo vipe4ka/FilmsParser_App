@@ -9,4 +9,38 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
+
+    <string-array name="genres_array">
+        <item>аниме</item>
+        <item>биография</item>
+        <item>боевик</item>
+        <item>вестерн</item>
+        <item>военный</item>
+        <item>детектив</item>
+        <item>документальный</item>
+        <item>драма</item>
+        <item>игра</item>
+        <item>история</item>
+        <item>комедия</item>
+        <item>концерт</item>
+        <item>короткометражка</item>
+        <item>криминал</item>
+        <item>мелодрама</item>
+        <item>мистика</item>
+        <item>музыка</item>
+        <item>мультфильм</item>
+        <item>мюзикл</item>
+        <item>новости</item>
+        <item>приключения</item>
+        <item>реальное тв</item>
+        <item>семейный</item>
+        <item>спорт</item>
+        <item>ток-шоу</item>
+        <item>триллер</item>
+        <item>ужасы</item>
+        <item>фантастика</item>
+        <item>фильм-нуар</item>
+        <item>фэнтези</item>
+        <item>церемония</item>
+    </string-array>
 </resources>

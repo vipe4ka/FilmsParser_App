@@ -12,7 +12,7 @@ import com.example.filmsparserapp.FilmData;
 import com.example.filmsparserapp.R;
 import com.example.filmsparserapp.databinding.FragmentGalleryBinding;
 import com.squareup.picasso.Picasso;
-import org.jetbrains.annotations.NotNull;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,27 +21,80 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GalleryFragment extends Fragment {
 
     private FragmentGalleryBinding binding;
 
+    int selectedGenre = -1;
+    String selectedRating;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Spinner spinnerGenres = root.findViewById(R.id.setgenresButton);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(), R.array.genres_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGenres.setAdapter(adapter);
+
+        spinnerGenres.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedGenre = position + 1;
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         binding.button.setOnClickListener(v -> {
             int vis = binding.layoutFields.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
             binding.layoutFields.setVisibility(vis);
-            binding.editTextId.setVisibility(vis);
-            binding.buttonSearch.setVisibility(vis);
+            binding.setgenresButton.setVisibility(vis);
+            binding.setMinRating.setVisibility(vis);
         });
-        binding.buttonSearch.setOnClickListener(v -> {
+        binding.research.setOnClickListener(v -> {
             binding.layoutFields.setVisibility(View.GONE);
-            binding.editTextId.setVisibility(View.GONE);
-            binding.buttonSearch.setVisibility(View.GONE);
-            String id = binding.editTextId.getText().toString();
-            fetchFilmData(id);
+            binding.setgenresButton.setVisibility(View.GONE);
+            binding.setMinRating.setVisibility(View.GONE);
+
+            selectedRating = binding.setMinRating.getText().toString();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String url = "https://ru.kinorium.com/R2D2/?order=rating&page=1&perpage=20&genres%5B%5D=" + selectedGenre + "&imdb_rating_min=" + selectedRating;
+                        Document page = Jsoup.connect(url).get();
+                        Log.d("MyLog", page.toString());
+                        Element lastPageElement = page.select(".lastPage").first();
+                        String lastpageStr = lastPageElement.attr("data-page");
+                        int lastPageInt = Integer.parseInt(lastpageStr);
+
+                        /*Random rand = new Random();
+                        int randPage = rand.nextInt(lastPageInt) + 1;
+                        url = "https://ru.kinorium.com/R2D2/?order=rating&page="+randPage+"&perpage=20&genres%5B%5D=" + selectedGenre + "&imdb_rating_min=" + selectedRating;
+
+                        page = Jsoup.connect(url).get();
+
+                        Elements filmElements = page.select("div.filmList div.item");
+                        ArrayList<String> filmList = new ArrayList<>();
+                        for (Element el : filmElements) {
+                            String rel = el.attr("rel");
+                            filmList.add(rel);
+                        }
+
+                        String randFilm = filmList.get(rand.nextInt(filmList.size()));
+
+                        fetchFilmData(randFilm);*/
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        // Обработка ошибки, например, вывод в лог или уведомление пользователю
+                    }
+                }
+            }).start();
+
         });
 
         return root;
@@ -109,7 +162,6 @@ public class GalleryFragment extends Fragment {
             String description = descriptionEl.text();
             Element imageBlock = page.select("div.carousel_image-handler img").first();
             String posterUrl = imageBlock.attr("src");
-            Log.d("MyLog", posterUrl);
 
             FilmData filmData = new FilmData();
             filmData.setPosterUrl(posterUrl);
