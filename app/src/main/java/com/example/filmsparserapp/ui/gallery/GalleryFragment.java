@@ -65,23 +65,13 @@ public class GalleryFragment extends Fragment {
         TextView titleTextView = getView().findViewById(R.id.titleTextView);
         titleTextView.setText(filmData.getTitle());
         titleTextView.setVisibility(View.VISIBLE);
-        // Обновление года
-        TextView yearTextView = getView().findViewById(R.id.yearTextView);
-        yearTextView.setText(String.valueOf(filmData.getYear()));
-        yearTextView.setVisibility(View.VISIBLE);
         // Обновление рейтинга
         TextView ratingTextView = getView().findViewById(R.id.ratingTextView);
         ratingTextView.setText(String.valueOf(filmData.getRating()));
         ratingTextView.setVisibility(View.VISIBLE);
         // Обновление жанров
         TextView genresTextView = getView().findViewById(R.id.genresTextView);
-        StringBuilder genresBuilder = new StringBuilder();
-        for (String genre : filmData.getGenres()) {
-            genresBuilder.append(genre).append(", ");
-        }
-        String genresText = genresBuilder.toString().trim();
-        genresText = genresText.substring(0, genresText.length() - 1);
-        genresTextView.setText(genresText);
+        genresTextView.setText(filmData.getGenre());
         genresTextView.setVisibility(View.VISIBLE);
         // Обновление описания
         TextView descriptionTextView = getView().findViewById(R.id.descriptionTextView);
@@ -92,31 +82,29 @@ public class GalleryFragment extends Fragment {
     private void run(String id) {
         try {
             // Загрузка страницы фильма
-            Document page = Jsoup.connect("https://ru.kinorium.com/" + id + "/").get();
-            Element titleEl = page.select("h1[class=\"film-page__title-text film-page__itemprop\"]").first();
+            Document page = Jsoup.connect("https://www.kino.ru/film/" + id).get();
+            Log.d("MyLog", page.toString());
+            //название
+            Element titleEl = page.select("div[class=\"titles\"]").first();
             String title = titleEl.text();
-            Element premiereAndMoney = page.select("td[class=\"data\"]").get(3);
-            String pm = premiereAndMoney.text();
-            Element ratingEl = page.select("div[class=\"film-page__title-buttons\"]").first();
+            //рейтинг
+            Element ratingEl = page.select("div[class=\"stars_in_page star_rate_film_" + id + "\"]").first();
             String rating = ratingEl.text();
-            Elements genresEl = page.select("li[itemprop=\"genre\"]");
-            List<String> genres = new ArrayList<>();
-            for (Element g : genresEl) {
-                String genre = g.attr("content");
-                genres.add(genre);
-            }
-            Element descriptionEl = page.select("section[itemprop=\"description\"]").first();
+            //жанр
+            Element genreEl = page.select("a[itemprop=\"genre\"]").first();
+            String genre = genreEl.text();
+            //описание
+            Element descriptionEl = page.select("div[itemprop=\"description\"]").first();
             String description = descriptionEl.text();
-            Element imageBlock = page.select("div.carousel_image-handler img").first();
+            //url картинки
+            Element imageBlock = page.select("img[itemprop=\"image\"]").first();
             String posterUrl = imageBlock.attr("src");
-            Log.d("MyLog", posterUrl);
 
             FilmData filmData = new FilmData();
             filmData.setPosterUrl(posterUrl);
             filmData.setTitle(title);
-            filmData.setYear(pm);
             filmData.setRating(rating);
-            filmData.setGenres(genres);
+            filmData.setGenre(genre);
             filmData.setDescription(description);
 
             // Обновление UI с полученной информацией о фильме
