@@ -7,4 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="rating_low">#FF0000</color>  <!-- Красный -->
+    <color name="rating_medium">#FFC107</color>  <!-- Желтый -->
+    <color name="rating_high">#00FF00</color>  <!-- Зеленый -->
 </resources>

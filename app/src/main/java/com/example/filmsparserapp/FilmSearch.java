@@ -1,34 +1,33 @@
-package com.example.filmsparserapp.ui.gallery;
+package com.example.filmsparserapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import com.example.filmsparserapp.FilmData;
-import com.example.filmsparserapp.R;
-import com.example.filmsparserapp.databinding.FragmentGalleryBinding;
+import com.example.filmsparserapp.databinding.FragmentSearchFilmBinding;
 import com.squareup.picasso.Picasso;
-import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
 
-public class GalleryFragment extends Fragment {
+public class FilmSearch extends Fragment {
 
-    private FragmentGalleryBinding binding;
+    private FragmentSearchFilmBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentGalleryBinding.inflate(inflater, container, false);
+        binding = FragmentSearchFilmBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         binding.button.setOnClickListener(v -> {
             int vis = binding.layoutFields.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
@@ -40,10 +39,23 @@ public class GalleryFragment extends Fragment {
             binding.layoutFields.setVisibility(View.GONE);
             binding.editTextId.setVisibility(View.GONE);
             binding.buttonSearch.setVisibility(View.GONE);
+            binding.watchbutton.setVisibility(View.VISIBLE);
             String id = binding.editTextId.getText().toString();
             fetchFilmData(id);
         });
+        binding.kinoru.setOnClickListener(v -> {
+            String url = "https://www.kino.ru/";
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        });
+        binding.watchbutton.setOnClickListener(v -> {
+            String id = binding.editTextId.getText().toString();
+            TextView titleTextView = getView().findViewById(R.id.titleTextView);
+            String title = titleTextView.getText().toString();
 
+            WatchedMoviesRepository repository = new WatchedMoviesRepository(getContext());
+            repository.addWatchedMovie(id, title);
+        });
         return root;
     }
 
@@ -69,6 +81,15 @@ public class GalleryFragment extends Fragment {
         TextView ratingTextView = getView().findViewById(R.id.ratingTextView);
         ratingTextView.setText(String.valueOf(filmData.getRating()));
         ratingTextView.setVisibility(View.VISIBLE);
+        Double rate = Double.parseDouble(filmData.getRating());
+        // Меняем цвет рейтинга
+        if (rate < 5) {
+            ratingTextView.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        } else if (rate < 7) {
+            ratingTextView.getBackground().setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_IN);
+        } else {
+            ratingTextView.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+        }
         // Обновление жанров
         TextView genresTextView = getView().findViewById(R.id.genresTextView);
         genresTextView.setText(filmData.getGenre());
